@@ -81,6 +81,18 @@ app.post("/api/shorturl", async (req, res) => {
   }
 });
 
+app.get("/api/shorturl/:short", async (req, res) => {
+  try {
+    const record = await Url.findOne({ short_url: req.params.short });
+    if (!record) {
+      return res.json({ error: "No short URL found" });
+    }
+    return res.redirect(record.original_url);
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 app.listen(port, function () {
   console.log(`Listening on port ${port}`);
 });
